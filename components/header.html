@@ -1,4 +1,12 @@
-<header>
-  <button onclick="logout()">ログアウト</button>
-  <hr>
+<header class="header">
+  <button id="logoutBtn">ログアウト</button>
 </header>
+
+<style>
+  .header {
+    position: fixed;   /* 画面に固定 */
+    top: 10px;         /* 上から10px */
+    right: 20px;       /* 右から20px */
+    z-index: 1000;
+  }
+</style>
