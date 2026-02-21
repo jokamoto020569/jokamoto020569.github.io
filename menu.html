@@ -1,18 +1,45 @@
 <!DOCTYPE html>
-<html>
-<script type="module" src="./js/auth-guard.js"></script>
-<script>
-fetch("./components/header.html")
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById("header").innerHTML = data;
-  });
-</script>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>メニュー</title>
+</head>
 
-<script type="module" src="./js/logout.js"></script>
-<script type="module" src="./js/auth-guard.js"></script>
 <body>
+
+  <!-- 共通ヘッダー表示エリア -->
   <div id="header"></div>
-  <h1>メニュー画面</h1>
+
+  <!-- メイン -->
+  <main>
+    <h1>メニュー画面</h1>
+
+    <ul>
+      <li><a href="page1.html">ページ1</a></li>
+      <li><a href="page2.html">ページ2</a></li>
+    </ul>
+  </main>
+
+  <!-- ========================= -->
+  <!-- header読み込み（共通UI） -->
+  <!-- ========================= -->
+  <script>
+    fetch("./components/header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+      });
+  </script>
+
+  <!-- ========================= -->
+  <!-- 共通処理 -->
+  <!-- ========================= -->
+
+  <!-- ログインチェック（未ログインならlogin.htmlへ） -->
+  <script type="module" src="./js/auth-guard.js"></script>
+
+  <!-- ログアウト処理 -->
+  <script type="module" src="./js/logout.js"></script>
+
 </body>
 </html>
