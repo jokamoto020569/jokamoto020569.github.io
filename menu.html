@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>メニュー</title>
+
+  <!-- 🔥 スマホ対応必須 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 共通CSS -->
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
 
-  <!-- 共通ヘッダー表示エリア -->
+  <!-- 共通ヘッダー -->
   <div id="header"></div>
 
   <!-- メイン -->
-  <main>
-    <h1>メニュー画面</h1>
+  <main class="container">
+    <h1>メニュー</h1>
 
-    <ul>
+    <ul class="menu">
       <li><a href="page1.html">ページ1</a></li>
       <li><a href="page2.html">ページ2</a></li>
     </ul>
   </main>
 
-  <!-- ========================= -->
-  <!-- header読み込み（共通UI） -->
-  <!-- ========================= -->
+  <!-- header読み込み -->
   <script>
     fetch("./components/header.html")
       .then(res => res.text())
@@ -31,14 +36,8 @@
       });
   </script>
 
-  <!-- ========================= -->
   <!-- 共通処理 -->
-  <!-- ========================= -->
-
-  <!-- ログインチェック（未ログインならlogin.htmlへ） -->
   <script type="module" src="./js/auth-guard.js"></script>
-
-  <!-- ログアウト処理 -->
   <script type="module" src="./js/logout.js"></script>
 
 </body>
