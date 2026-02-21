@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>ログイン</h2>
+
+<input id="email" placeholder="メール">
+<input id="password" type="password" placeholder="パスワード">
+<button onclick="login()">ログイン</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  // ← Firebaseの設定コード貼る
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+
+window.login = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    location.href = "menu.html";
+  } catch(e) {
+    alert("ログイン失敗");
+  }
+};
+</script>
+
+</body>
+</html>
