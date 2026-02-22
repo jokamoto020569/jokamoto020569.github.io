@@ -203,10 +203,11 @@
 
         const select = document.getElementById("category");
         const timespandata = timespansnap.data();
-        Object.values(timespandata).forEach(item => {
+        Object.entries(timespandata).forEach(([key, value]) => {
           const option = document.createElement("option");
-          option.value = item.value;
-          option.textContent = item.name;
+        
+          option.value = key;
+          option.textContent = value;
         
           select.appendChild(option);
         });
