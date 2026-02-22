@@ -96,16 +96,16 @@
       <!-- チェックボックス10個 -->
       <div class="checkbox-group">
         <h3>トレード前確認</h3>
-        <label><input type="checkbox" name="checkbox" value="1"> チェック1</label>
-        <label><input type="checkbox" name="checkbox" value="2"> チェック2</label>
-        <label><input type="checkbox" name="checkbox" value="3"> チェック3</label>
-        <label><input type="checkbox" name="checkbox" value="4"> チェック4</label>
-        <label><input type="checkbox" name="checkbox" value="5"> チェック5</label>
-        <label><input type="checkbox" name="checkbox" value="6"> チェック6</label>
-        <label><input type="checkbox" name="checkbox" value="7"> チェック7</label>
-        <label><input type="checkbox" name="checkbox" value="8"> チェック8</label>
-        <label><input type="checkbox" name="checkbox" value="9"> チェック9</label>
-        <label><input type="checkbox" name="checkbox" value="10"> チェック10</label>
+        <label><input type="checkbox" id="checkbox1" value="1"> チェック1</label>
+        <label><input type="checkbox" id="checkbox2" value="2"> チェック2</label>
+        <label><input type="checkbox" id="checkbox3" value="3"> チェック3</label>
+        <label><input type="checkbox" id="checkbox4" value="4"> チェック4</label>
+        <label><input type="checkbox" id="checkbox5" value="5"> チェック5</label>
+        <label><input type="checkbox" id="checkbox6" value="6"> チェック6</label>
+        <label><input type="checkbox" id="checkbox7" value="7"> チェック7</label>
+        <label><input type="checkbox" id="checkbox8" value="8"> チェック8</label>
+        <label><input type="checkbox" id="checkbox9" value="9"> チェック9</label>
+        <label><input type="checkbox" id="checkbox10" value="10"> チェック10</label>
       </div>
 
       <!-- ラジオボタン2つ -->
@@ -137,29 +137,38 @@
 
   <!-- Firebase SDK読み込み -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    // import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "XXX",
-      appId: "XXX"
-    };
+    // const firebaseConfig = {
+    //   apiKey: "YOUR_API_KEY",
+    //   authDomain: "YOUR_PROJECT.firebaseapp.com",
+    //   projectId: "YOUR_PROJECT_ID",
+    //   storageBucket: "YOUR_PROJECT.appspot.com",
+    //   messagingSenderId: "XXX",
+    //   appId: "XXX"
+    // };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // const app = initializeApp(firebaseConfig);
+    // const db = getFirestore(app);
 
     const form = document.getElementById("myForm");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // チェックボックスの値を配列に
-      const checkboxes = Array.from(document.querySelectorAll('input[name="checkbox"]:checked')).map(cb => cb.value);
-
+      // チェックボックス
+      const checkbox1 = document.getElementById("checkbox1").value;
+      const checkbox2 = document.getElementById("checkbox1").value;
+      const checkbox3 = document.getElementById("checkbox1").value;
+      const checkbox4 = document.getElementById("checkbox1").value;
+      const checkbox5 = document.getElementById("checkbox1").value;
+      const checkbox6 = document.getElementById("checkbox1").value;
+      const checkbox7 = document.getElementById("checkbox1").value;
+      const checkbox8 = document.getElementById("checkbox1").value;
+      const checkbox9 = document.getElementById("checkbox1").value;
+      const checkbox10 = document.getElementById("checkbox1").value;
+      
       // テキスト入力
       const input1 = document.getElementById("input1").value;
       const input2 = document.getElementById("input2").value;
@@ -167,9 +176,11 @@
       // ラジオボタン
       const radioEl = document.querySelector('input[name="radio"]:checked');
       const radio = radioEl ? radioEl.value : "";
+      const buy = radio == "buy";
+      const sell = radio == "sell";
 
       try {
-        await addDoc(collection(db, "formResponses"), {
+        await addDoc(collection(db, "TradeHistoryTbl"), {
           checkboxes,
           input1,
           input2,
