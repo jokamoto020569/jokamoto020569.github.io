@@ -107,16 +107,16 @@
       <!-- チェックボックス10個 -->
       <div class="checkbox-group">
         <h3>トレード前確認</h3>
-        <label><input type="checkbox" id="checkbox1" value="1"> <label id=check1text></label></label>
-        <label><input type="checkbox" id="checkbox2" value="2"> <label id=check2text></label></label>
-        <label><input type="checkbox" id="checkbox3" value="3"> <label id=check3text></label></label>
-        <label><input type="checkbox" id="checkbox4" value="4"> <label id=check4text></label></label>
-        <label><input type="checkbox" id="checkbox5" value="5"> <label id=check5text></label></label>
-        <label><input type="checkbox" id="checkbox6" value="6"> <label id=check6text></label></label>
-        <label><input type="checkbox" id="checkbox7" value="7"> <label id=check7text></label></label>
-        <label><input type="checkbox" id="checkbox8" value="8"> <label id=check8text></label></label>
-        <label><input type="checkbox" id="checkbox9" value="9"> <label id=check9text></label></label>
-        <label><input type="checkbox" id="checkbox10" value="10"> <label id=check10text></label></label>
+        <label><input type="checkbox" id="checkbox1" value="1"> <span id=check1text></span></label>
+        <label><input type="checkbox" id="checkbox2" value="2"> <span id=check2text></span></label>
+        <label><input type="checkbox" id="checkbox3" value="3"> <span id=check3text></span></label>
+        <label><input type="checkbox" id="checkbox4" value="4"> <span id=check4text></span></label>
+        <label><input type="checkbox" id="checkbox5" value="5"> <span id=check5text></span></label>
+        <label><input type="checkbox" id="checkbox6" value="6"> <span id=check6text></span></label>
+        <label><input type="checkbox" id="checkbox7" value="7"> <span id=check7text></span></label>
+        <label><input type="checkbox" id="checkbox8" value="8"> <span id=check8text></span></label>
+        <label><input type="checkbox" id="checkbox9" value="9"> <span id=check9text></span></label>
+        <label><input type="checkbox" id="checkbox10" value="10"> <span id=check10text></span></label>
       </div>
 
       <!-- ラジオボタン2つ -->
@@ -190,25 +190,24 @@
         }
         
         const conditiondata = conditionsnap.data();
-        document.getElementById("check1text").value = conditiondata.Condition1;
-        document.getElementById("check2text").value = conditiondata.Condition2;
-        document.getElementById("check3text").value = conditiondata.Condition3;
-        document.getElementById("check4text").value = conditiondata.Condition4;
-        document.getElementById("check5text").value = conditiondata.Condition5;
-        document.getElementById("check6text").value = conditiondata.Condition6;
-        document.getElementById("check7text").value = conditiondata.Condition7;
-        document.getElementById("check8text").value = conditiondata.Condition8;
-        document.getElementById("check9text").value = conditiondata.Condition9;
-        document.getElementById("check10text").value = conditiondata.Condition10;
+        document.getElementById("check1text").textContent  = conditiondata.Condition1;
+        document.getElementById("check2text").textContent  = conditiondata.Condition2;
+        document.getElementById("check3text").textContent  = conditiondata.Condition3;
+        document.getElementById("check4text").textContent  = conditiondata.Condition4;
+        document.getElementById("check5text").textContent  = conditiondata.Condition5;
+        document.getElementById("check6text").textContent  = conditiondata.Condition6;
+        document.getElementById("check7text").textContent  = conditiondata.Condition7;
+        document.getElementById("check8text").textContent  = conditiondata.Condition8;
+        document.getElementById("check9text").textContent  = conditiondata.Condition9;
+        document.getElementById("check10text").textContent  = conditiondata.Condition10;
 
         const select = document.getElementById("category");
-        timespansnap.forEach(docSnap => {
-          const timespandata = docSnap.data();
-    
+        const timespandata = timespansnap.data();
+        Object.values(timespandata).forEach(item => {
           const option = document.createElement("option");
-          option.value = timespandata.value;
-          option.textContent = data.name;
-    
+          option.value = item.value;
+          option.textContent = item.name;
+        
           select.appendChild(option);
         });
         
@@ -217,6 +216,7 @@
       }
     }
     
+    loadInitialData();
     
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -237,8 +237,8 @@
       const timespan = document.getElementById("category").value;
       
       // テキスト入力
-      const inputprofit = document.getElementById("input_profit").value;
-      const inputloss = document.getElementById("input_loss").value;
+      const inputprofit = Number(document.getElementById("input_profit").value);
+      const inputloss = Number(document.getElementById("input_loss").value);
 
       // ラジオボタン
       const radioEl = document.querySelector('input[name="radio"]:checked');
@@ -272,10 +272,10 @@
           Condition8: checkbox8,
           Condition9: checkbox9,
           Condition10: checkbox10,
-          EntryTime: severTimestamp(),
+          EntryTime: serverTimestamp(),
           IsTrading: true,
           ProfitLoss: 0,
-          RiskReward: Math.round((inputprofit/inputloss)*100)/100,
+          RiskReward: inputloss !== 0 ? Math.round((inputprofit / inputloss) * 100) / 100 : 0,
           CreateDateTime: serverTimestamp(),
           UpdateDateTIme: serverTimestamp()
         });
