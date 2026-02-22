@@ -87,6 +87,17 @@
 
   <!-- 共通ヘッダー -->
   <div id="header"></div>
+  <script>
+    fetch("./components/header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+      });
+  </script>
+
+  <!-- 共通処理 -->
+  <script type="module" src="./js/auth-guard.js"></script>
+  <script type="module" src="./js/logout.js"></script>
 
   <main class="container">
     <h1>トレード内容登録</h1>
@@ -194,6 +205,8 @@
         alert("送信失敗");
       }
     });
+
+    
   </script>
 
 </body>
