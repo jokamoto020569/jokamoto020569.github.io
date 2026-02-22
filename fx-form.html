@@ -107,16 +107,16 @@
       <!-- チェックボックス10個 -->
       <div class="checkbox-group">
         <h3>トレード前確認</h3>
-        <label><input type="checkbox" id="checkbox1" value="1"> チェック1</label>
-        <label><input type="checkbox" id="checkbox2" value="2"> チェック2</label>
-        <label><input type="checkbox" id="checkbox3" value="3"> チェック3</label>
-        <label><input type="checkbox" id="checkbox4" value="4"> チェック4</label>
-        <label><input type="checkbox" id="checkbox5" value="5"> チェック5</label>
-        <label><input type="checkbox" id="checkbox6" value="6"> チェック6</label>
-        <label><input type="checkbox" id="checkbox7" value="7"> チェック7</label>
-        <label><input type="checkbox" id="checkbox8" value="8"> チェック8</label>
-        <label><input type="checkbox" id="checkbox9" value="9"> チェック9</label>
-        <label><input type="checkbox" id="checkbox10" value="10"> チェック10</label>
+        <label><input type="checkbox" id="checkbox1" value="1"> <label id=check1text></label></label>
+        <label><input type="checkbox" id="checkbox2" value="2"> <label id=check2text></label></label>
+        <label><input type="checkbox" id="checkbox3" value="3"> <label id=check3text></label></label>
+        <label><input type="checkbox" id="checkbox4" value="4"> <label id=check4text></label></label>
+        <label><input type="checkbox" id="checkbox5" value="5"> <label id=check5text></label></label>
+        <label><input type="checkbox" id="checkbox6" value="6"> <label id=check6text></label></label>
+        <label><input type="checkbox" id="checkbox7" value="7"> <label id=check7text></label></label>
+        <label><input type="checkbox" id="checkbox8" value="8"> <label id=check8text></label></label>
+        <label><input type="checkbox" id="checkbox9" value="9"> <label id=check9text></label></label>
+        <label><input type="checkbox" id="checkbox10" value="10"> <label id=check10text></label></label>
       </div>
 
       <!-- ラジオボタン2つ -->
@@ -124,6 +124,14 @@
         <h3>売買</h3>
         <label><input type="radio" name="radio" value="buy"> 買</label>
         <label><input type="radio" name="radio" value="sell"> 売</label>
+      </div>
+
+      <!-- ドロップダウン -->
+      <div class="card">
+        <h3>時間足選択</h3>
+        <select id="category" style="width:100%; padding:8px; border-radius:8px;">
+          <option value="">選択してください</option>
+        </select>
       </div>
 
       <!-- テキスト入力2つ -->
@@ -148,41 +156,89 @@
 
   <!-- Firebase SDK読み込み -->
   <script type="module">
-    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-    // import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
-
-    // const firebaseConfig = {
-    //   apiKey: "YOUR_API_KEY",
-    //   authDomain: "YOUR_PROJECT.firebaseapp.com",
-    //   projectId: "YOUR_PROJECT_ID",
-    //   storageBucket: "YOUR_PROJECT.appspot.com",
-    //   messagingSenderId: "XXX",
-    //   appId: "XXX"
-    // };
-
-    // const app = initializeApp(firebaseConfig);
-    // const db = getFirestore(app);
+    import { db } from "./js/firebase.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const form = document.getElementById("myForm");
 
+    // =============================
+    // 初期値取得（ページ表示時）
+    // =============================
+    async function loadInitialData() {
+      try {
+        // 条件,時間足データ取得
+        const conditionmst = doc(db, "FxCondMst", "byxFU67Yvg1hEOnAjzj2");
+        const timespanmst = doc(db, "TradeTimeSpan", "7nKlDWouiWJtViOo73Hh");
+
+        const conditionsnap = await getDoc(conditionmst);
+        const timespansnap = await getDoc(timespanmst);
+    
+        if (!conditionsnap.exists()) {
+          console.log("条件データ取得できず");
+          return;
+        }
+    
+        if (!timespansnap.exists()) {
+          console.log("時間足設定できず");
+          return;
+        }
+        
+        const conditiondata = conditionsnap.data();
+        document.getElementById("check1text").value = conditiondata.Condition1;
+        document.getElementById("check2text").value = conditiondata.Condition2;
+        document.getElementById("check3text").value = conditiondata.Condition3;
+        document.getElementById("check4text").value = conditiondata.Condition4;
+        document.getElementById("check5text").value = conditiondata.Condition5;
+        document.getElementById("check6text").value = conditiondata.Condition6;
+        document.getElementById("check7text").value = conditiondata.Condition7;
+        document.getElementById("check8text").value = conditiondata.Condition8;
+        document.getElementById("check9text").value = conditiondata.Condition9;
+        document.getElementById("check10text").value = conditiondata.Condition10;
+
+        const select = document.getElementById("category");
+        timespansnap.forEach(docSnap => {
+          const timespandata = docSnap.data();
+    
+          const option = document.createElement("option");
+          option.value = timespandata.value;
+          option.textContent = data.name;
+    
+          select.appendChild(option);
+        });
+        
+      } catch (err) {
+        console.error("初期値取得失敗", err);
+      }
+    }
+    
+    
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       // チェックボックス
-      const checkbox1 = document.getElementById("checkbox1").value;
-      const checkbox2 = document.getElementById("checkbox1").value;
-      const checkbox3 = document.getElementById("checkbox1").value;
-      const checkbox4 = document.getElementById("checkbox1").value;
-      const checkbox5 = document.getElementById("checkbox1").value;
-      const checkbox6 = document.getElementById("checkbox1").value;
-      const checkbox7 = document.getElementById("checkbox1").value;
-      const checkbox8 = document.getElementById("checkbox1").value;
-      const checkbox9 = document.getElementById("checkbox1").value;
-      const checkbox10 = document.getElementById("checkbox1").value;
+      const checkbox1 = document.getElementById("checkbox1").checked;
+      const checkbox2 = document.getElementById("checkbox2").checked;
+      const checkbox3 = document.getElementById("checkbox3").checked;
+      const checkbox4 = document.getElementById("checkbox4").checked;
+      const checkbox5 = document.getElementById("checkbox5").checked;
+      const checkbox6 = document.getElementById("checkbox6").checked;
+      const checkbox7 = document.getElementById("checkbox7").checked;
+      const checkbox8 = document.getElementById("checkbox8").checked;
+      const checkbox9 = document.getElementById("checkbox9").checked;
+      const checkbox10 = document.getElementById("checkbox10").checked;
+
+      // ドロップダウン
+      const timespan = document.getElementById("category").value;
       
       // テキスト入力
-      const input1 = document.getElementById("input1").value;
-      const input2 = document.getElementById("input2").value;
+      const inputprofit = document.getElementById("input_profit").value;
+      const inputloss = document.getElementById("input_loss").value;
 
       // ラジオボタン
       const radioEl = document.querySelector('input[name="radio"]:checked');
@@ -190,13 +246,38 @@
       const buy = radio == "buy";
       const sell = radio == "sell";
 
+      const now = new Date();
+      const formatted =
+        now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0");
+      
       try {
         await addDoc(collection(db, "TradeHistoryTbl"), {
-          checkboxes,
-          input1,
-          input2,
-          radio,
-          createdAt: serverTimestamp()
+          TradeId: formatted,
+          Buy: buy,
+          Sell: sell,
+          TradeTimeSpan: timespan,
+          ExpectedProfit: inputprofit,
+          ExpectedLoss: inputloss,
+          Condition1: checkbox1,
+          Condition2: checkbox2,
+          Condition3: checkbox3,
+          Condition4: checkbox4,
+          Condition5: checkbox5,
+          Condition6: checkbox6,
+          Condition7: checkbox7,
+          Condition8: checkbox8,
+          Condition9: checkbox9,
+          Condition10: checkbox10,
+          EntryTime: severTimestamp(),
+          IsTrading: true,
+          ProfitLoss: 0,
+          RiskReward: Math.round((inputprofit/inputloss)*100)/100,
+          CreateDateTime: serverTimestamp(),
+          UpdateDateTIme: serverTimestamp()
         });
         alert("送信成功！");
         form.reset();
@@ -205,8 +286,6 @@
         alert("送信失敗");
       }
     });
-
-    
   </script>
 
 </body>
