@@ -136,8 +136,9 @@
 
       <!-- テキスト入力2つ -->
       <div class="card">
-        <h3>予想利益/予想損失</h3>
+        <h3>予想利益</h3>
         <input type="text" id="input_profit" placeholder="">
+        <h3>予想損失</h3>
         <input type="text" id="input_loss" placeholder="">
       </div>
 
@@ -281,7 +282,7 @@
           UpdateDateTIme: serverTimestamp()
         });
         alert("送信成功！");
-        form.reset();
+        location.href = "menu.html";
       } catch (err) {
         console.error(err);
         alert("送信失敗");
