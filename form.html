@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>入力フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 共通CSS -->
+  <link rel="stylesheet" href="./css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f4f4f8;
+      color: #333;
+    }
+
+    main.container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 24px;
+      color: #222;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .checkbox-group label,
+    .radio-group label {
+      display: block;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #4a90e2;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    /* ヘッダー余白 */
+    #header {
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 共通ヘッダー -->
+  <div id="header"></div>
+
+  <main class="container">
+    <h1>トレード内容入力フォーム</h1>
+
+    <form id="myForm" class="card">
+
+      <!-- チェックボックス10個 -->
+      <div class="checkbox-group">
+        <h3>トレード前確認</h3>
+        <label><input type="checkbox" name="checkbox" value="1"> チェック1</label>
+        <label><input type="checkbox" name="checkbox" value="2"> チェック2</label>
+        <label><input type="checkbox" name="checkbox" value="3"> チェック3</label>
+        <label><input type="checkbox" name="checkbox" value="4"> チェック4</label>
+        <label><input type="checkbox" name="checkbox" value="5"> チェック5</label>
+        <label><input type="checkbox" name="checkbox" value="6"> チェック6</label>
+        <label><input type="checkbox" name="checkbox" value="7"> チェック7</label>
+        <label><input type="checkbox" name="checkbox" value="8"> チェック8</label>
+        <label><input type="checkbox" name="checkbox" value="9"> チェック9</label>
+        <label><input type="checkbox" name="checkbox" value="10"> チェック10</label>
+      </div>
+
+      <!-- ラジオボタン2つ -->
+      <div class="radio-group card">
+        <h3>売買</h3>
+        <label><input type="radio" name="radio" value="buy"> 買</label>
+        <label><input type="radio" name="radio" value="sell"> 売</label>
+      </div>
+
+      <!-- テキスト入力2つ -->
+      <div class="card">
+        <h3>予想利益/予想損失</h3>
+        <input type="text" id="input_profit" placeholder="">
+        <input type="text" id="input_loss" placeholder="">
+      </div>
+
+      <button type="submit">保存</button>
+    </form>
+  </main>
+
+  <!-- header読み込み -->
+  <script>
+    fetch("./components/header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+      });
+  </script>
+
+  <!-- Firebase SDK読み込み -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "XXX",
+      appId: "XXX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("myForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // チェックボックスの値を配列に
+      const checkboxes = Array.from(document.querySelectorAll('input[name="checkbox"]:checked')).map(cb => cb.value);
+
+      // テキスト入力
+      const input1 = document.getElementById("input1").value;
+      const input2 = document.getElementById("input2").value;
+
+      // ラジオボタン
+      const radioEl = document.querySelector('input[name="radio"]:checked');
+      const radio = radioEl ? radioEl.value : "";
+
+      try {
+        await addDoc(collection(db, "formResponses"), {
+          checkboxes,
+          input1,
+          input2,
+          radio,
+          createdAt: serverTimestamp()
+        });
+        alert("送信成功！");
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        alert("送信失敗");
+      }
+    });
+  </script>
+
+</body>
+</html>
