@@ -1,2 +1,107 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>トレード一覧</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+
+  <style>
+    .container { max-width: 600px; margin: auto; padding: 16px; }
+
+    .trade-item{
+      background:#fff;
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:12px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:6px;
+    }
+    
+    button{
+      padding:8px 12px;
+      border:none;
+      border-radius:6px;
+      background:#4a90e2;
+      color:white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 共通ヘッダー -->
+  <div id="header"></div>
+  <script>
+    fetch("./components/header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+      });
+  </script>
+
+  <!-- 共通処理 -->
+  <script type="module" src="./js/auth-guard.js"></script>
+  <script type="module" src="./js/logout.js"></script>
+
+  <main class="container">
+    <h1>トレード一覧</h1>
+    <div id="list"></div>
+</main>
+
+<script type="module">
+  import { db } from "./js/firebase.js";
+  import {
+    collection,
+    getDocs,
+    query,
+    orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const listEl = document.getElementById("list");
+
+  async function loadTrades(){
+  
+    const q = query(
+      collection(db,"TradeHistoryTbl"),
+      orderBy("TradeId","desc") // ← 降順
+    );
+  
+    const snap = await getDocs(q);
+  
+    snap.forEach(docSnap=>{
+      const data = docSnap.data();
+      const id = docSnap.id;
+  
+      const position = data.Buy ? "買" : data.Sell ? "売" : "-";
+      const status = data.IsTrading ? "取引中" : "完了";
+  
+      const div = document.createElement("div");
+      div.className = "trade-item";
+  
+      div.innerHTML = `
+        <div class="row"><b>ポジション</b><span>${position}</span></div>
+        <div class="row"><b>ステータス</b><span>${status}</span></div>
+        <div class="row"><b>エントリー日時</b><span>${data.EntryTime}</span></div>
+        <div class="row"><b>損益</b><span>${data.ProfitLoss ?? 0}</span></div>
+        <button onclick="goDetail('${id}')">詳細</button>
+      `;
+  
+      listEl.appendChild(div);
+    });
+  }
+  
+  window.goDetail = (id)=>{
+    location.href = `trade-detail.html?id=${id}`;
+  };
+  
+  loadTrades();
+</script>
+</body>
 </html>
